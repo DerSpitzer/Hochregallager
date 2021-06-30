@@ -13,7 +13,6 @@ body{
   margin-top: 15px;
   min-width: 200px;
   flex-direction: column;
-  
 }
 
 .header{
@@ -38,13 +37,13 @@ body{
   justify-content: center; 
 }
 
-
 .shadow {
   -moz-box-shadow:    3px 3px 5px 3px rgb(58, 57, 57);
   -webkit-box-shadow: 3px 3px 5px 3px rgb(58, 57, 57);
   box-shadow:         3px 3px 5px 4px rgb(58, 57, 57);
 }
 
+/* Definitionen für die Lagerübersicht */
 .grid{
   display: grid;
   height: 400px;
@@ -56,25 +55,22 @@ body{
   padding: 5px;
   align-self: center;
   margin-top: 40px;
-  
 }
 
+/* Einzelnes Fach der Lagerübersicht */
 .grid > div {
   background-color: lightgreen;
   padding: 5px;
   font-size: 30px;
   height: 120px;
   width: 120px;
-
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .doughnut {
-  width: 100px;
-  height: 100px;
-  background-color: white;
+  background-color: none;
 }
 
 .overlay {
@@ -83,14 +79,11 @@ body{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   display: inline-block;
   display: flex;
-  
   width: 400px;
   height: 200px;
 }
-
 
 .btn {
   text-align: center;

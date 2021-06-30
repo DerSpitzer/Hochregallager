@@ -99,7 +99,7 @@
                 <div class="contentContainer" style="width:250px;height:300px">
                     <h1 class="header"> Auslastung </h1>
                     <label class="myFont" id="belegt_label">Belegte Fächer: 0</label>
-                    <canvas id="myChart" class="doughnut"></canvas>
+                    <canvas id="myChart" class="doughnut" style="margin-top: 20px;"></canvas>
                 </div>
 
                 <!-- Start container Timer -->
@@ -127,6 +127,7 @@
                 <!-- Start container Bestandsveränderung -->
                 <div class="contentContainer" style="width:520px;height:271px">
                     <h1 class="header"> Bestandsveränderung</h1>
+                    <canvas id="myLinechart" style="position: absolute; margin-top: 20px;width:500px;height: 250px;"></canvas>
                 </div>
             </div>
         </div>
@@ -137,10 +138,12 @@
     <!-- Start container Einlagerunsinfo -->
     <div id="infoBox" class="contentContainer overlay shadow" style="display:none">
         <h2 class="header"> Einlagerunsinfo</h2>
-        <label class="myFont" id="fachstatus">Fach 1_1 ist leer.</label>
+        <label class="myFont" id="fachstatus" style="margin-left: 10px;">Fach 1_1 ist leer.</label>
         <br>
-        <label class="myFont">Neue Ware:</label>
         <br>
+        <label class="myFont"><u>Neue Ware</u></label>
+        <br>
+        
         <label class="myFont">
             RFID-Adresse:
             <input type="text" name="serialno" placeholder="000000" id="rfid" style="width: 50px;">
@@ -170,7 +173,9 @@
     <!-- Start container Ergebnismeldung -->
     <div id="Ergebnismeldung" class="contentContainer overlay shadow" style="display:none">
         <h2 class="header"> Ergebnismeldung</h2>
-        <label class="myFont">Die Ware yy (ID/RDIF) wird in das Fach xx eingelagert</label>
+        <label id="Ergebnismeldung-label" class="myFont">Die Ware (ID/RDIF)</label>
+        <br>
+        <label id="Ergebnismeldung-label2" class="myFont"> wird in das Fach xx eingelagert</label>
         <button class="btn" style="position:absolute; bottom:10px; right:10px;" onclick="closeErgebnismeldung()">
             <i class="fa fa-times" ></i>
         </button>
