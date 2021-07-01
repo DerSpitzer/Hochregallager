@@ -11,6 +11,9 @@ let time_of_simulation = 0;
 // The interval itself so we can toggle it from everywhere
 var our_simulation;
 
+var doughnut;
+var lineChart;
+
 var xValuesLine = [0]
 var yValuesLine = [0];
 
@@ -129,7 +132,7 @@ function simulate() {
             console.log(error);
         } else {
             // Clearing our interval if we reach the end of file
-            if (time_of_simulation == data.length) {
+            if (data[time_of_simulation].datum == undefined) {
                 clearInterval(our_simulation);
                 document.getElementById("start_button").disabled = false;
             } else {
@@ -142,8 +145,8 @@ function simulate() {
 
                 // Dealing with updating the line chart
                 if (time_of_simulation % 60 == 0) {
-                    updateLinechart();
-                    clearLineChart();
+                    updateLine();
+                    clearLineChartValues();
                 }
             }
         }
@@ -259,22 +262,64 @@ function closeErgebnismeldung(){
 
 // Gets called once when the body loads
 function setup() {
-    updateDoughnut();
-    updateLinechart();
+    initDoughnut();
     initLinechart();
 }
 
+// Initializing the line chart
 function initLinechart() {
     for(var i=1 ; i<61 ; i++) {
         xValuesLine.push(i);
         yValuesLine.push(Math.floor(Math.random() * 6) + 1)
     }
 
-    updateLinechart();
+    var barColors = ["orange"];
+    linechart = new Chart("myLinechart", {
+        type: "line",
+        data: {
+            labels: xValuesLine,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValuesLine
+            }]
+        },
+        options: {
+            title: {
+                display: false,
+            },
+            responsive: false,
+            legend: {
+                labels: {
+                    fontColor: "white",
+                    fontSize: 12
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontColor: "white",
+                        fontSize: 8,
+                        stepSize: 1,
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: "white",
+                        fontSize: 8,
+                        stepSize: 1,
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+       });
+
+    clearLineChartValues();
 }
 
-// Updated the doughnut chart
-function updateDoughnut() {
+// Initializing the doughnut
+function initDoughnut() {
     // Getting the number of items in our storage
     var count = 0
     for (var i in items) {
@@ -287,11 +332,9 @@ function updateDoughnut() {
 
     var xValues = ["Belegt", "Frei"];
     var yValues = [count, 9-count];
-    var barColors = [
-    "orange",
-    "green"
-    ];
-    new Chart("myChart", {
+    var barColors = ["orange","green"];
+
+    doughnut = new Chart("myChart", {
         type: "doughnut",
         data: {
             labels: xValues,
@@ -302,14 +345,43 @@ function updateDoughnut() {
         },
         options: {
             title: {
-                display: false,
+                display: true,
             },
-            responsive: false,
+            legend: {
+                labels: {
+                    fontColor: "white",
+                    fontSize: 12
+                }
+            }
         }
     });
 }
 
-function clearLineChart() {
+// Updated the doughnut chart
+function updateDoughnut() {
+    // Getting the number of items in our storage
+    var count = 0
+    for (var i in items) {
+        if (items[i].status == "full") {
+           count+=1;
+        }
+    }
+    document.getElementById("belegt_label").innerHTML = "Belegte Fächer: " + count;
+    doughnut.data.datasets[0].data[0] = count;
+    doughnut.data.datasets[0].data[1] = 9-count;
+    doughnut.update();
+}
+
+// Updating the line chart itself
+function updateLine(){
+    for (var i=0; i<=60; i++) {
+        linechart.data.datasets[0].data[i] = yValuesLine[i];
+    }
+    linechart.update();
+}
+
+// Updating the Values for the line chart
+function clearLineChartValues() {
     var count = 0;
     for (var i in items) {
         if (items[i].status == "full") {
@@ -333,40 +405,6 @@ function updateLinechartValues(data) {
     datum = datum.slice(14,19);
     xValuesLine.push(datum);
     yValuesLine.push(count);
-}
-
-// Updated the line chart
-function updateLinechart() {
-    var barColors = [
-    "orange",
-    ];
-    new Chart("myLinechart", {
-        type: "line",
-        data: {
-            labels: xValuesLine,
-            datasets: [{
-                backgroundColor: barColors,
-                data: yValuesLine
-            }]
-        },
-        options: {
-            title: {
-                display: false,
-            },
-            responsive: false,
-        },
-        column: {
-            pointPadding: 0.2,
-            size: '95%',
-            borderWidth: 0,
-            events: {
-                legendItemClick: function () {
-                    return false; 
-                }
-            }
-        },
-        allowPointSelect: false,
-    });
 }
 
 // Removes items from a fach
