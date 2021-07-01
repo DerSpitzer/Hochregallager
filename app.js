@@ -142,7 +142,7 @@ function setValues(data) {
 // This function is our simulation (it gets called every 1000ms)
 function simulate() {
     // Clearing our interval if we reach the end of file
-    if (data[time_of_simulation].datum == undefined) {
+    if (time_of_simulation == data.length) {
         clearInterval(our_simulation);
         document.getElementById("start_button").disabled = false;
     } else {
