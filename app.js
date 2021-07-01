@@ -44,7 +44,7 @@ var items = [
 
 // Event Listener for start button
 function startSimulation() {
-    our_simulation = setInterval(simulate, 300);
+    our_simulation = setInterval(simulate, 1000);
     document.getElementById("start_button").disabled = true;
     document.getElementById("start_button").style.backgroundColor = 'RoyalBlue';
 }
