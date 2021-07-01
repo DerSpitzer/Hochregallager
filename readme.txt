@@ -1,2 +1,1 @@
-Zum Ausführen des Programmes benötigen Sie 3 dateien im selben Ordner. (index.html, app.js, style.css)
-Klicken Sie mit einem Rechtsklick auf die Datei index.html und öffnen Sie diese mit Google Chrome.
+Willkommen zu unserem Simulationsprogramm.

@@ -7,8 +7,12 @@
        
         <link href="style.css" rel="stylesheet"/>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        </style>
 
         <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="ft_fach.json"></script>
         <script src="app.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -105,15 +109,15 @@
                 <!-- Start container Timer -->
                 <div class="contentContainer" style="display: inline-block; width:250px; height:300px; background-color: #217446;">
                     <h1 class="header"> Timer </h1>
-                    <label class="myFont">Time:</label>
+                    <label class="myFont">T:</label>
                     <label class="myFont" id="time_label">15.05.2019 12:10:00</label>
                     <br>
                     <br>
                     <label class="myFont">X: </label>
-                    <label class="myFont" id="vertikal">0</label>
+                    <label class="myFont" id="horizontal">0</label>
                     <br>
                     <label class="myFont">Y: </label>
-                    <label class="myFont" id="horizontal">0</label>
+                    <label class="myFont" id="vertikal">0</label>
                     <br>
                     <canvas class="canvas" id="myCanvas" width="200" height="100"></canvas>
                     <button class="buttonStart" id="reset_button" style="margin-top: 15px; margin-left: 5px; width: 85px;" onclick="resetSimulation()">
@@ -127,7 +131,7 @@
                 <!-- Start container Bestandsveränderung -->
                 <div class="contentContainer" style="width:520px;height:271px">
                     <h1 class="header"> Bestandsveränderung</h1>
-                    <canvas id="myLinechart" style="position: absolute; margin-top: 20px;width:500px;height: 250px;"></canvas>
+                    <canvas id="myLinechart" style="position: absolute; margin-top: 35px;width:510px;height: 230px;"></canvas>
                 </div>
             </div>
         </div>

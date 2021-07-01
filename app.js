@@ -11,13 +11,25 @@ let time_of_simulation = 0;
 // The interval itself so we can toggle it from everywhere
 var our_simulation;
 
+// Data from the website
+var data;
+
+// Fetch data from website once
+d3.json("https://it2wi1.if-lab.de/rest/ft_fach").then( (data, error) => {
+        if (error) {
+            console.log(error);
+        } else {
+            this.data = data;
+        }
+}); 
+
+// Our two graphs, so we can update them from everywhere
 var doughnut;
 var lineChart;
-
 var xValuesLine = [0]
-var yValuesLine = [0];
+var yValuesLine = [9];
 
-// This is our array of items in the storage
+// Our array of items in the storage
 var items = [ 
           { id: "1_1", status: "empty", RFID:111111, ID:000000, color:"white" }
         , { id: "1_2", status: "empty", RFID:111111, ID:000000, color:"white" }
@@ -39,7 +51,6 @@ function startSimulation() {
 
 // Event listener for reset button
 function resetSimulation() {
-    let reset_time = document.getElementById("reset_button");
     clearInterval(our_simulation);
     time_of_simulation = 0;
     simulate()
@@ -55,10 +66,13 @@ function inRange(x, min, max) {
 // Event listener for fillAll button
 function fillAll() {
     for (var x = 0; x < items.length; x += 1) {
-        items[x].RFID = 55555;
+        items[x].RFID = 123456;
         items[x].status = "full";
-        items[x].ID = 444444;
-        items[x].color = "blue"
+        items[x].ID = 654321;
+        if (x<3)items[x].color = "white";
+        else if(x<6)items[x].color = "blue";
+        else items[x].color = "red";
+
 
         // Change the display
         document.getElementById(items[x].id).style.backgroundColor = items[x].color;
@@ -127,37 +141,30 @@ function setValues(data) {
 
 // This function is our simulation (it gets called every 1000ms)
 function simulate() {
-    d3.json("https://it2wi1.if-lab.de/rest/ft_fach").then( (data, error) => {
-        if (error) {
-            console.log(error);
-        } else {
-            // Clearing our interval if we reach the end of file
-            if (data[time_of_simulation].datum == undefined) {
-                clearInterval(our_simulation);
-                document.getElementById("start_button").disabled = false;
-            } else {
-                datum = data[time_of_simulation].datum
-                document.getElementById('time_label').innerHTML = datum;
-                setValues(data)
-                time_of_simulation += 1;
+    // Clearing our interval if we reach the end of file
+    if (data[time_of_simulation].datum == undefined) {
+        clearInterval(our_simulation);
+        document.getElementById("start_button").disabled = false;
+    } else {
+        datum = data[time_of_simulation].datum
+        document.getElementById('time_label').innerHTML = datum;
+        setValues(data)
+        time_of_simulation += 1;
 
-                updateLinechartValues(data);
+        updateLinechartValues(data);
 
-                // Dealing with updating the line chart
-                if (time_of_simulation % 60 == 0) {
-                    updateLine();
-                    clearLineChartValues();
-                }
-            }
+        // Dealing with updating the line chart
+        if (time_of_simulation % 60 == 0) {
+            updateLine();
+            clearLineChartValues();
         }
-    });
+    }
 }
 
 // Helper function which converts an id (1_2) into the space in the array of items
 function getPos(id){
     var a = parseInt(id.slice(0,1))
     var b = parseInt(id.slice(2,3))
-    console.log(a,b)
     return (a-1)*3+b-1;
 }
 
@@ -192,7 +199,6 @@ function closeInfoFach() {
     document.getElementById("InfoFach").style.display = "none";
 }
 
-
 // Event listener for the submit button to submit a item
 function checkInfo() {
     // We let our window disappear
@@ -209,7 +215,6 @@ function checkInfo() {
     var e = document.getElementById("selection");
     var value = e.options[e.selectedIndex].value;
     var color = e.options[e.selectedIndex].text;
-    console.log(color)
     if (color == "Weiß") color = "white";
     if (color == "Blau") color = "blue";
     if (color == "Rot") color = "red";
@@ -268,11 +273,12 @@ function setup() {
 
 // Initializing the line chart
 function initLinechart() {
+    // Init with 0
     for(var i=1 ; i<61 ; i++) {
         xValuesLine.push(i);
-        yValuesLine.push(Math.floor(Math.random() * 6) + 1)
+        yValuesLine.push(0)
     }
-
+    
     var barColors = ["orange"];
     linechart = new Chart("myLinechart", {
         type: "line",
@@ -289,10 +295,7 @@ function initLinechart() {
             },
             responsive: false,
             legend: {
-                labels: {
-                    fontColor: "white",
-                    fontSize: 12
-                }
+                display: false,
             },
             scales: {
                 yAxes: [{
@@ -300,6 +303,7 @@ function initLinechart() {
                         fontColor: "white",
                         fontSize: 8,
                         stepSize: 1,
+                        steps: 9,
                         beginAtZero: true
                     }
                 }],
@@ -332,7 +336,7 @@ function initDoughnut() {
 
     var xValues = ["Belegt", "Frei"];
     var yValues = [count, 9-count];
-    var barColors = ["orange","green"];
+    var barColors = ["orange","lightgreen"];
 
     doughnut = new Chart("myChart", {
         type: "doughnut",
@@ -388,20 +392,18 @@ function clearLineChartValues() {
            count+=1;
         }
     }
-
     xValuesLine = [0]
-    yValuesLine = [count]
+    yValuesLine = [9]
 }
 
-function updateLinechartValues(data) {
+// Updates the values of the line chart
+function updateLinechartValues(datum) {
     var count = 0;
     for (var i in items) {
         if (items[i].status == "full") {
            count+=1;
         }
     }
-
-    var datum = data[time_of_simulation].datum;
     datum = datum.slice(14,19);
     xValuesLine.push(datum);
     yValuesLine.push(count);
@@ -432,4 +434,6 @@ function kickItem(getID) {
 // Reset the simulation time
 function reset() {
     time_of_simulation = 0;
+    clearLineChartValues();
+    updateLine();
 }
